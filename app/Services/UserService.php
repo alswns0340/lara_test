@@ -9,6 +9,12 @@ final class UserService
 {
     public function retrieveUser(string $id): ?User
     {
-        return User::find($id);
+        $user = User::find($userid);
+        
+        if( $user){
+            $user->purchases = Purchase::where('user_id',$id)->get();
+        }
+
+        return $user;
     }
 }

@@ -2,7 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\Layered\UserController as LayeredUserController;
 use App\Http\Actions\UserIndexAction;
+use App\Http\Controllers\TestRequestController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -27,3 +29,9 @@ Route::get('/user',[UserController::class,'index']);
 Route::post('/user',[UserController::class,'store']);
 
 Route::get('/users', UserIndexAction::class);
+
+Route::get('/layered/user/{id}',[LayeredUserController::class,'index']);
+
+Route::get('/request-test', [TestRequestController::class, 'create'])->name('reqest.create');
+
+Route::post('/request-test', [TestRequestController::class, 'store'])->name('request.store');
