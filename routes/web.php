@@ -35,3 +35,12 @@ Route::get('/layered/user/{id}',[LayeredUserController::class,'index']);
 Route::get('/request-test', [TestRequestController::class, 'create'])->name('reqest.create');
 
 Route::post('/request-test', [TestRequestController::class, 'store'])->name('request.store');
+
+Route::prefix('response-demo')->name('response-demo.')->group(function () {
+    Route::get('/string', [\App\Http\Controllers\ResponseDemoController::class, 'string'])->name('string');
+    Route::get('/view', [\App\Http\Controllers\ResponseDemoController::class, 'view'])->name('view');
+    Route::get('/json', [\App\Http\Controllers\ResponseDemoController::class, 'json'])->name('json');
+    Route::get('/download', [\App\Http\Controllers\ResponseDemoController::class, 'download'])->name('download');
+    Route::get('/redirect', [\App\Http\Controllers\ResponseDemoController::class, 'redirect'])->name('redirect');
+    Route::get('/rediret-target', [\App\Http\Controllers\ResponseDemoController::class, 'redirectTarget'])->name('redirect-target');
+});
