@@ -49,5 +49,8 @@
                 {{ __('Log in') }}
             </x-primary-button>
         </div>
+          <a href="/auth/github/redirect" class="font-semibold text-gray-600 hover:textgray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2
+focus:rounded-sm focus:outline-red-500">GitHub 로그인</a>;
     </form>
+
 </x-guest-layout>
