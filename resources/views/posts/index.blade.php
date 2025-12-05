@@ -7,74 +7,84 @@
 
     <div class="py-6">
         <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
-            @if (session('success'))
-                <div class="mb-4 text-green-600">
-                    {{ session('success') }}
-                </div>
-            @endif
-
             <div class="mb-4 flex justify-end">
                 <a href="{{ route('posts.create') }}"
-                   class="px-4 py-2 bg-blue-500 text-white rounded">
+                   class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
                     글쓰기
                 </a>
             </div>
 
             <div class="bg-white shadow-sm sm:rounded-lg">
-                <table class="min-w-full text-left">
-                    <thead class="border-b">
-                        <tr>
-                            <th class="px-4 py-2 w-16">ID</th>
-                            <th class="px-4 py-2">제목</th>
-                            <th class="px-4 py-2 w-48">작성일</th>
-                            <th class="px-4 py-2 w-32">액션</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($posts as $post)
-                            <tr class="border-b">
-                                <td class="px-4 py-2">{{ $post->id }}</td>
-                                <td class="px-4 py-2">
-                                    <a href="{{ route('posts.show', $post) }}"
-                                       class="text-blue-600 hover:underline">
-                                        {{ $post->title }}
-                                    </a>
-                                </td>
-                                <td class="px-4 py-2">
-                                    {{ $post->created_at->format('Y-m-d H:i') }}
-                                </td>
-                                <td class="px-4 py-2">
-                                    <a href="{{ route('posts.edit', $post) }}"
-                                       class="text-sm text-indigo-600 mr-2">
-                                        수정
-                                    </a>
-                                    <form action="{{ route('posts.destroy', $post) }}"
-                                          method="POST"
-                                          class="inline"
-                                          onsubmit="return confirm('삭제하시겠습니까?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit"
-                                                class="text-sm text-red-600">
-                                            삭제
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
-                        @empty
+                <div class="h-[75vh] overflow-y-auto">
+                    <table class="h-[100%] min-w-full table-fixed text-left text-sm">
+                        <thead class="h-[10%] border-b bg-gray-50 text-gray-600">
                             <tr>
-                                <td class="px-4 py-4 text-center" colspan="4">
-                                    게시글이 없습니다.
-                                </td>
+                                <th class="px-4 py-2 w-16">No.</th>
+                                <th class="px-4 py-2">제목</th>
+                                <th class="px-4 py-2 w-48">작성일</th>
+                                <th class="px-4 py-2 w-32">작성자</th>
                             </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                        </thead>
+
+                        <tbody class="">
+                            @forelse ($posts as $post)
+                                <tr class="border-b hover:bg-gray-100 cursor-pointer"
+                                    onclick="location.href='{{ route('posts.show', $post) }}'">
+
+                                    <td class="px-4 py-2 text-center">
+                                        {{ $posts->firstItem() + $loop->index }}
+                                    </td>
+
+                                    <td class="px-4 py-2 hover:underline">
+                                        {{ $post->title }}
+                                    </td>
+
+                                    <td class="px-4 py-2">
+                                        {{ $post->created_at->format('Y-m-d H:i') }}
+                                    </td>
+
+                                    <td class="px-4 py-2">
+                                        {{ $post->user->name }}
+                                    </td>
+                                </tr>
+
+                            @empty
+                                <tr>
+                                    <td class="px-4 py-4 text-center text-gray-500" colspan="4">
+                                        게시글이 없습니다.
+                                    </td>
+                                </tr>
+                            @endforelse
+                            @php
+                            $perPage = 15;
+                            $currentCount = $posts->count();
+                            if ($currentCount === 0) {
+                                $remainRows = $perPage - 1;
+                            } else {
+                                $remainRows = $perPage - $currentCount;
+                            }
+                        @endphp
+
+                        @if ($remainRows > 0)
+                            @for ($i = 0; $i < $remainRows; $i++)
+                                <tr class="bg-white">
+                                    <td class="px-4 py-2">&nbsp;</td>
+                                    <td class="px-4 py-2"></td>
+                                    <td class="px-4 py-2"></td>
+                                    <td class="px-4 py-2"></td>
+                                </tr>
+                            @endfor
+                        @endif
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
+            {{-- 페이징 --}}
             <div class="mt-4">
                 {{ $posts->links() }}
             </div>
+
         </div>
     </div>
 </x-app-layout>

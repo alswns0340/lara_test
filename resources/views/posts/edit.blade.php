@@ -1,54 +1,28 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            글 수정
-        </h2>
-    </x-slot>
+<form action="{{ route('posts.update', $post) }}"
+      method="POST"
+      enctype="multipart/form-data">
+    @csrf
+    @method('PUT')
 
-    <div class="py-6">
-        <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white shadow-sm sm:rounded-lg p-6">
 
-                @if ($errors->any())
-                    <div class="mb-4 text-red-600">
-                        <ul class="list-disc pl-5">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-
-                <form action="{{ route('posts.update', $post) }}" method="POST">
-                    @csrf
-                    @method('PUT')
-
-                    <div class="mb-4">
-                        <label class="block mb-1 font-semibold">제목</label>
-                        <input type="text" name="title"
-                               value="{{ old('title', $post->title) }}"
-                               class="w-full border rounded px-3 py-2">
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="block mb-1 font-semibold">내용</label>
-                        <textarea name="content" rows="8"
-                                  class="w-full border rounded px-3 py-2">{{ old('content', $post->content) }}</textarea>
-                    </div>
-
-                    <div class="flex justify-end">
-                        <a href="{{ route('posts.show', $post) }}"
-                           class="px-4 py-2 mr-2 border rounded">
-                            취소
-                        </a>
-                        <button type="submit"
-                                class="px-4 py-2 bg-blue-600 text-white rounded">
-                            수정
-                        </button>
-                    </div>
-                </form>
-
-            </div>
+    @if ($post->attachment)
+        <div class="mb-2 text-sm">
+            <span class="text-gray-700">현재 파일:</span>
+            <a href="{{ asset('storage/'.$post->attachment) }}"
+               class="text-blue-600 hover:underline"
+               target="_blank">
+                다운로드
+            </a>
         </div>
+    @endif
+
+    <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700">파일 첨부 (교체하려면 선택)</label>
+        <input type="file" name="attachment"
+               class="mt-1 block w-full text-sm">
+        @error('attachment')
+            <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+        @enderror
     </div>
-</x-app-layout>
+
+</form>

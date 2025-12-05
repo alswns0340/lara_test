@@ -4,6 +4,8 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\GithubAuthController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\PostCommentController;
+
 // Route::get('/', function () {
 //     return view('welcome');
 // });
@@ -26,4 +28,14 @@ Route::get('/admin',function(){
 
 Route::resource('posts', PostController::class);
 
+Route::middleware('auth')->group(function () {
+    Route::post('/posts/{post}/comments', [PostCommentController::class, 'store'])
+        ->name('posts.comments.store');
+
+    Route::put('/comments/{comment}', [PostCommentController::class, 'update'])
+        ->name('comments.update');
+
+    Route::delete('/comments/{comment}', [PostCommentController::class, 'destroy'])
+        ->name('comments.destroy');
+});
 require __DIR__.'/auth.php';
